@@ -9,6 +9,13 @@ img{display: block;}
 body{font-family: 'Noto Sans KR', sans-serif;}
 
 
-#player{width: 100px; height: 100px; background-color: orange; position: absolute; left: 20px; top: 0;}
+#player{width: 100px; height: 100px; background-color: orange; position: absolute; left: auto; top: 1000px; background: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4e120f62-b8be-4af6-bb1e-6d13d4218774/df4avez-59c240dd-2241-45b6-94e6-96880fe397b1.png/v1/fill/w_894,h_894/yin_yang_custom__1_by_albinofoxart_df4avez-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTIwMCIsInBhdGgiOiJcL2ZcLzRlMTIwZjYyLWI4YmUtNGFmNi1iYjFlLTZkMTNkNDIxODc3NFwvZGY0YXZlei01OWMyNDBkZC0yMjQxLTQ1YjYtOTRlNi05Njg4MGZlMzk3YjEucG5nIiwid2lkdGgiOiI8PTEyMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.VHnHhG5c-zA3sB33GpWceyi68eS9FEc0QDLDSjxM0pw) no-repeat center / contain;
+animation: ani_circle 3s infinite linear;
+}
 
-li{display: none; position: absolute; font-size: 36px;}
+li{display: none; position: absolute; font-size: 36px; animation: ani_circle .5s infinite linear;}
+@keyframes ani_circle {
+  0%{transform: rotate(0deg);}
+  100%{transform: rotate(360deg);}
+}
+

@@ -1,12 +1,28 @@
+const BULLET_SPEED = 20;
+const PLAYER_SPEED = 10;
+const SCREEN_FRAME = 20;
+const BULLET_FIRST_SIZE = 36;
+
 const $player = document.querySelector('#player');
 const $$bullets = document.querySelectorAll('li');
 
 let bullets = [];
 
+let playerX = 900;
+let playerY = 800;
+
+let keys = {
+  'ArrowLeft':false,
+  'ArrowRight':false,
+  'ArrowUp':false,
+  'ArrowDown':false
+}
+
 class Bullet{
   $bullet;
   x;
   y;
+  size;
   isShoot = false;
 
   constructor($bullet, x,y){
@@ -16,41 +32,36 @@ class Bullet{
   }
 
   moveBullet(){
-    this.y -= 10;
+    this.y -= BULLET_SPEED;
+    this.size += 2;
     this.draw();
     this.removeBullet();
   }
 
   draw(){
     this.$bullet.style.top = this.y + 'px';
+    this.$bullet.style.fontSize = this.size + 'px';
   }
 
   removeBullet(){
     if(this.y <= 0){
       this.$bullet.style.display = 'none';
+      
       this.isShoot = false;
     }
   }
 
-  firstDraw(){
-    this.$bullet.style.display = 'block';
+  async firstDraw(){
     this.y = playerY;
-    this.x = playerX + 45;
+    this.x = playerX + 32;
+    this.size = BULLET_FIRST_SIZE;
+    this.$bullet.style.fontSize = this.size + 'px';
     this.$bullet.style.left = this.x + 'px';
     this.$bullet.style.top = this.y + 'px';
     this.$bullet.style.color = getRandomColorCode();
     this.isShoot = true;
+    this.$bullet.style.display = 'block';
   }
-}
-
-let playerX = 0;
-let playerY = 0;
-
-let keys = {
-  'ArrowLeft':false,
-  'ArrowRight':false,
-  'ArrowUp':false,
-  'ArrowDown':false
 }
 
 $$bullets.forEach(($bullet)=>{
@@ -68,7 +79,7 @@ document.addEventListener('keyup', (e)=>{
   keys[e.code] = false;
 })
 
-setInterval(gameLoop, 20);
+setInterval(gameLoop, SCREEN_FRAME);
 function gameLoop(){
   moveBullet();
   move();
@@ -76,16 +87,16 @@ function gameLoop(){
 
 function move(){
   if(keys.ArrowLeft){
-    playerX -= 10;
+    playerX -= PLAYER_SPEED;
   }
   if(keys.ArrowRight){
-    playerX += 10;
+    playerX += PLAYER_SPEED;
   }
   if(keys.ArrowUp){
-    playerY -= 10;
+    playerY -= PLAYER_SPEED;
   }
   if(keys.ArrowDown){
-    playerY += 10;
+    playerY += PLAYER_SPEED;
   }
 
   $player.style.left = playerX + 'px';
@@ -111,7 +122,6 @@ function attack(){
     }
   }
   bullet.firstDraw();
-  
 }
 
 function moveBullet(){
@@ -121,3 +131,5 @@ function moveBullet(){
     }
   });
 }
+
+
