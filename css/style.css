@@ -10,7 +10,7 @@ body{font-family: 'Noto Sans KR', sans-serif; user-select: none;}
 
 body * {outline: 1px dotted red;}
 
-#player{width: 100px; height: 100px; background-color: orange; position: absolute; left: 50%; top: 70%; background: url(https://cdn0.iconfinder.com/data/icons/gray-business-toolbar/512/startup-512.png) no-repeat center / contain; z-index: 5;
+#player{width: 50px; height: 50px; background-color: orange; position: absolute; left: 50%; top: 70%; background: url(https://cdn0.iconfinder.com/data/icons/gray-business-toolbar/512/startup-512.png) no-repeat center / contain; z-index: 5;
 }
 
 #bullets li{display: none; position: absolute; width: 6px; height: 24px; background-image: linear-gradient(to bottom, red, yellow); border-top-right-radius: 3px; border-top-left-radius: 3px; z-index: 4;}

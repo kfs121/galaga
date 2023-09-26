@@ -1,11 +1,13 @@
 // 이제 점수화, 하면됨.
+// 오브젝트 크기 변경 시 css, 
+// 스크립트에서는 WIDTH와 HEIGHT,
 
 const BULLET_SPEED = 20;
 const PLAYER_SPEED = 10;
 const SCREEN_FRAME = 20;
 
-const PLAYER_WIDTH = 100;
-const PLAYER_HEIGHT = 100;
+const PLAYER_WIDTH = 50;
+const PLAYER_HEIGHT = 50;
 
 const BOARD_WIDTH = 1200;
 const BOARD_HEIGHT = 800;
@@ -205,8 +207,8 @@ class Bullet {
     const distance = Math.sqrt(dx * dx + dy * dy);
     const vx = (dx / distance) * BULLET_SPEED;
     const vy = (dy / distance) * BULLET_SPEED;
-    this.y = playerY + 38;
-    this.x = playerX + 47;
+    this.y = playerY + PLAYER_HEIGHT/2 - BULLET_HEIGHT/2;
+    this.x = playerX + PLAYER_WIDTH/2 - BULLET_WIDTH/2;
     this.offsetX = vx;
     this.offsetY = vy;
 
@@ -254,12 +256,13 @@ const mouseMoveEvent = (e)=>{
 }
 $board.addEventListener("mousemove", mouseMoveEvent);
 
-$board.addEventListener("click", (e) => {
+const clickEvent = (e)=>{
   const dx = e.offsetX - playerX - PLAYER_WIDTH / 2;
   const dy = e.offsetY - playerY - PLAYER_HEIGHT / 2;
 
   attack(dx, dy);
-});
+}
+$board.addEventListener("click",clickEvent);
 
 $$enemies.forEach(($enemy) => {
   const enemy = new Enemy($enemy);
@@ -312,8 +315,10 @@ function gameEnd(){
   clearInterval(gameInterval);
   clearInterval(enemyRespawnInterval);
   $board.removeEventListener('mousemove',mouseMoveEvent);
+  $board.removeEventListener('click',clickEvent);
   console.log('you died.');
 }
+
 function getAngleDegrees(x, y) {
   const angle = Math.atan2(y, x);
   return `rotate(${angle * (180 / Math.PI) + 90}deg)`;
