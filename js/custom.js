@@ -1,3 +1,5 @@
+// 이제 점수화, 하면됨.
+
 const BULLET_SPEED = 20;
 const PLAYER_SPEED = 10;
 const SCREEN_FRAME = 20;
@@ -90,8 +92,8 @@ class Enemy {
   }
 
   removeEnemy() {
-    this.$enemy.style.display = "none";
     this.isLive = false;
+    this.$enemy.style.display = "none";
   }
 
   activeEnemy(x, y,speed){
@@ -217,16 +219,16 @@ class Bullet {
 }
 
 const enemiesRespawnAreas = [];
-for(let i = -1; i < 10; i++){
+for(let i = -1; i < (BOARD_HEIGHT/100) + 2; i++){
   enemiesRespawnAreas.push(new XY(-(ENEMY_WIDTH + 30), i* (ENEMY_WIDTH + 30)));
 }
-for(let i = -1; i < 10; i++){
+for(let i = -1; i < (BOARD_HEIGHT/100) + 2; i++){
   enemiesRespawnAreas.push(new XY(BOARD_WIDTH + (ENEMY_WIDTH + 30), i* (30 + ENEMY_WIDTH)));
 }
-for(let i = 0; i < 12;i++){
+for(let i = 0; i < (BOARD_WIDTH/100) + 2;i++){
   enemiesRespawnAreas.push(new XY(i*(ENEMY_WIDTH + 30), -(ENEMY_WIDTH + 30)));
 }
-for(let i = 0; i < 12;i++){
+for(let i = 0; i < (BOARD_WIDTH/100) + 2;i++){
   enemiesRespawnAreas.push(new XY(i*(ENEMY_WIDTH + 30), -(ENEMY_WIDTH + 30)));
 }
 
@@ -244,12 +246,13 @@ document.addEventListener("keyup", (e) => {
   keys[e.code] = false;
 });
 
-$board.addEventListener("mousemove", (e) => {
+const mouseMoveEvent = (e)=>{
   const dx = e.offsetX - playerX - PLAYER_WIDTH / 2;
   const dy = e.offsetY - playerY - PLAYER_HEIGHT / 2;
 
   $player.style.transform = getAngleDegrees(dx, dy);
-});
+}
+$board.addEventListener("mousemove", mouseMoveEvent);
 
 $board.addEventListener("click", (e) => {
   const dx = e.offsetX - playerX - PLAYER_WIDTH / 2;
@@ -308,6 +311,7 @@ function intervalFunction() {
 function gameEnd(){
   clearInterval(gameInterval);
   clearInterval(enemyRespawnInterval);
+  $board.removeEventListener('mousemove',mouseMoveEvent);
   console.log('you died.');
 }
 function getAngleDegrees(x, y) {

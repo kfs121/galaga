@@ -20,4 +20,5 @@ body * {outline: 1px dotted red;}
 
 
 
-#enemies li{ width: 70px; height: 70px; background: url(https://cdn-icons-png.flaticon.com/512/9334/9334853.png) no-repeat center / contain; position: absolute; display: none; pointer-events: none;}
+#enemies li{ width: 70px; height: 70px; background: url(https://cdn-icons-png.flaticon.com/512/9334/9334853.png) no-repeat center / contain; position: absolute; display: none; pointer-events: none; transition: opacity .5s;}
+#enemies li.hitted{opacity: 0; transform: scale(2);}
