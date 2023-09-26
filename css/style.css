@@ -6,16 +6,18 @@
 ul, ol{list-style-type: none;}
 a{text-decoration: none; color: inherit;}
 img{display: block;}
-body{font-family: 'Noto Sans KR', sans-serif;}
+body{font-family: 'Noto Sans KR', sans-serif; user-select: none;}
 
+body * {outline: 1px dotted red;}
 
-#player{width: 100px; height: 100px; background-color: orange; position: absolute; left: auto; top: 1000px; background: url(https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4e120f62-b8be-4af6-bb1e-6d13d4218774/df4avez-59c240dd-2241-45b6-94e6-96880fe397b1.png/v1/fill/w_894,h_894/yin_yang_custom__1_by_albinofoxart_df4avez-pre.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTIwMCIsInBhdGgiOiJcL2ZcLzRlMTIwZjYyLWI4YmUtNGFmNi1iYjFlLTZkMTNkNDIxODc3NFwvZGY0YXZlei01OWMyNDBkZC0yMjQxLTQ1YjYtOTRlNi05Njg4MGZlMzk3YjEucG5nIiwid2lkdGgiOiI8PTEyMDAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.VHnHhG5c-zA3sB33GpWceyi68eS9FEc0QDLDSjxM0pw) no-repeat center / contain;
-animation: ani_circle 3s infinite linear;
+#player{width: 100px; height: 100px; background-color: orange; position: absolute; left: 50%; top: 70%; background: url(https://cdn0.iconfinder.com/data/icons/gray-business-toolbar/512/startup-512.png) no-repeat center / contain; z-index: 5;
 }
 
-li{display: none; position: absolute; font-size: 36px; animation: ani_circle .5s infinite linear;}
-@keyframes ani_circle {
-  0%{transform: rotate(0deg);}
-  100%{transform: rotate(360deg);}
-}
+#bullets li{display: none; position: absolute; width: 6px; height: 24px; background-image: linear-gradient(to bottom, red, yellow); border-top-right-radius: 3px; border-top-left-radius: 3px; z-index: 4;}
 
+
+#board{width: 1200px; height: 800px; background-color: aliceblue; margin: 0 auto; margin-top: 40px; position: relative; cursor: url(../img/crosshair2.png) 20 20, auto; overflow: hidden;}
+
+
+
+#enemies li{ width: 70px; height: 70px; background: url(https://cdn-icons-png.flaticon.com/512/9334/9334853.png) no-repeat center / contain; position: absolute; display: none; pointer-events: none;}
