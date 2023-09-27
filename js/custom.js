@@ -22,6 +22,7 @@ const $player = document.querySelector("#player");
 const $$bullets = document.querySelectorAll("#bullets li");
 const $board = document.querySelector("#board");
 const $$enemies = document.querySelectorAll("#enemies li");
+const $score = document.querySelector('#score');
 
 
 
@@ -38,7 +39,9 @@ let enemyTimeCountOffset = 100;
 
 let isGameEnd = false;
 
+let score = 0;
 
+let scorePride = 0;
 
 let keys = {
   KeyA: false,
@@ -127,7 +130,7 @@ class Enemy {
       isGameEnd = true;
     }
     if(this.checkToEnd()){
-      this.activeEnemy(this.x, this.y,this.speed);
+      this.activeEnemy(this.x, this.y,enemySpeed);
     }
   }
 
@@ -278,6 +281,9 @@ function gameLoop() {
   moveEnemy();
   moveBullet();
   move();
+  score++;
+  $score.textContent = score;
+  changeScoreStyle();
 }
 // Game Loop End
 
@@ -379,6 +385,8 @@ function moveBullet() {
       bullet.moveBullet();
       enemies.forEach((enemy) => {
         if (enemy.bulletCollide(bullet) && enemy.isLive) {
+          score += enemy.speed * 10;
+          $score.textContent = score;
           enemy.removeEnemy();
           bullet.removeBullet();
         }
@@ -391,4 +399,52 @@ function moveEnemy() {
   enemies.forEach((enemy) => {
     enemy.moveEnemy();
   });
+}
+
+function changeScoreStyle(){
+  let updatedScorePride = getSocorePride();
+  if(updatedScorePride === scorePride) return;
+  scorePride = updatedScorePride;
+  switch(scorePride){
+    case 1:
+      $score.style.color = 'red';
+      $score.style.transform = 'scale(1.2)';
+      break;
+    case 2:
+      $score.style.color = 'purple';
+      $score.style.transform = 'scale(1.5)';
+      break;
+    case 3:
+      $score.style.color = 'orange';
+      $score.style.transform = 'scale(1.7)';
+      break;
+    case 4:
+      $score.style.color = 'yellow';
+      $score.style.transform = 'scale(2)';
+      break;
+    case 5:
+      $score.style.color = 'gray';
+      $score.style.transform = 'scale(2.3)';
+      break;
+    default:
+      $score.style.color = 'black';
+      $score.style.transform = 'scale(1)';
+      break;
+  }
+}
+
+function getSocorePride(){
+  if(score < 1000){
+    return 0;
+  }else if(score < 2000){
+    return 1;
+  }else if(score<3000){
+    return 2;
+  }else if(score<4000){
+    return 3;
+  }else if(score<5000){
+    return 4;
+  }else{
+    return 5;
+  }
 }
