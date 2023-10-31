@@ -1,6 +1,12 @@
 // 이제 점수화, 하면됨.
-// 오브젝트 크기 변경 시 css, 
+// 오브젝트 크기 변경 시 css,
 // 스크립트에서는 WIDTH와 HEIGHT,
+const $player = document.querySelector("#player");
+const $$bullets = document.querySelectorAll("#bullets li");
+const $board = document.querySelector("#board");
+const $$enemies = document.querySelectorAll("#enemies li");
+const $score = document.querySelector("#score");
+const $retryBtn = document.querySelector('#retry');
 
 const BULLET_SPEED = 20;
 const PLAYER_SPEED = 10;
@@ -18,45 +24,32 @@ const ENEMY_HEIGHT = 70;
 const BULLET_WIDTH = 6;
 const BULLET_HEIGHT = 24;
 
-const $player = document.querySelector("#player");
-const $$bullets = document.querySelectorAll("#bullets li");
-const $board = document.querySelector("#board");
-const $$enemies = document.querySelectorAll("#enemies li");
-const $score = document.querySelector('#score');
-
-
 
 let bullets = [];
 let enemies = [];
 
-let playerX = 550;
-let playerY = 600;
+let playerX;
+let playerY;
 let playerSpeed = PLAYER_SPEED;
 
-let enemySpeed = 5;
-let enemyTimeCount = 1000;
+let enemySpeed;;
+let enemyTimeCount;
 let enemyTimeCountOffset = 100;
 
-let isGameEnd = false;
+let isGameEnd;
 
-let score = 0;
+let score;
 
-let scorePride = 0;
+let scorePride;
 
-let keys = {
-  KeyA: false,
-  KeyD: false,
-  KeyW: false,
-  KeyS: false,
-  Space: false,
-};
+let keys;
 
 // class
-class XY{
+class XY {
   x;
   y;
-  constructor(x,y){
-    this.x= x;
+  constructor(x, y) {
+    this.x = x;
     this.y = y;
   }
 }
@@ -74,7 +67,7 @@ class Enemy {
   $enemy;
   speed;
 
-  constructor($enemy,x = 0, y = 0) {
+  constructor($enemy, x = 0, y = 0) {
     this.$enemy = $enemy;
     this.x = x;
     this.y = y;
@@ -101,12 +94,12 @@ class Enemy {
     this.$enemy.style.display = "none";
   }
 
-  activeEnemy(x, y,speed){
+  activeEnemy(x, y, speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
-    const dx = playerX - this.x - ENEMY_WIDTH/2
-    const dy = playerY - this.y - ENEMY_HEIGHT/2
+    const dx = playerX - this.x - ENEMY_WIDTH / 2;
+    const dy = playerY - this.y - ENEMY_HEIGHT / 2;
 
     let angleDegrees = getAngleDegrees(dx, dy);
     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -115,38 +108,33 @@ class Enemy {
     this.offsetX = vx;
     this.offsetY = vy;
     this.$enemy.style.transform = angleDegrees;
-    this.$enemy.style.left = this.x + 'px';
-    this.$enemy.style.top = this.y + 'px';
-    this.$enemy.style.display = 'block';
+    this.$enemy.style.left = this.x + "px";
+    this.$enemy.style.top = this.y + "px";
+    this.$enemy.style.display = "block";
     this.isLive = true;
   }
 
   moveEnemy() {
-    if(!this.isLive) return false;
+    if (!this.isLive) return false;
     this.x += this.offsetX;
     this.y += this.offsetY;
     this.draw();
-    if(this.playerCollide()){
+    if (this.playerCollide()) {
       isGameEnd = true;
     }
-    if(this.checkToEnd()){
-      this.activeEnemy(this.x, this.y,enemySpeed);
+    if (this.checkToEnd()) {
+      this.activeEnemy(this.x, this.y, enemySpeed);
     }
   }
 
-  playerCollide(){
-    
-    if (playerX + PLAYER_WIDTH> this.x && playerX  < this.x + ENEMY_WIDTH) {
-      if (
-        playerY < this.y + ENEMY_HEIGHT &&
-        playerY + PLAYER_HEIGHT > this.y
-      ) {
+  playerCollide() {
+    if (playerX + PLAYER_WIDTH > this.x && playerX < this.x + ENEMY_WIDTH) {
+      if (playerY < this.y + ENEMY_HEIGHT && playerY + PLAYER_HEIGHT > this.y) {
         return true;
       }
     }
   }
 
-  
   checkToEnd() {
     if (
       this.y <= 0 ||
@@ -210,8 +198,8 @@ class Bullet {
     const distance = Math.sqrt(dx * dx + dy * dy);
     const vx = (dx / distance) * BULLET_SPEED;
     const vy = (dy / distance) * BULLET_SPEED;
-    this.y = playerY + PLAYER_HEIGHT/2 - BULLET_HEIGHT/2;
-    this.x = playerX + PLAYER_WIDTH/2 - BULLET_WIDTH/2;
+    this.y = playerY + PLAYER_HEIGHT / 2 - BULLET_HEIGHT / 2;
+    this.x = playerX + PLAYER_WIDTH / 2 - BULLET_WIDTH / 2;
     this.offsetX = vx;
     this.offsetY = vy;
 
@@ -224,26 +212,29 @@ class Bullet {
 }
 
 const enemiesRespawnAreas = [];
-for(let i = -1; i < (BOARD_HEIGHT/100) + 2; i++){
-  enemiesRespawnAreas.push(new XY(-(ENEMY_WIDTH + 30), i* (ENEMY_WIDTH + 30)));
+for (let i = -1; i < BOARD_HEIGHT / 100 + 2; i++) {
+  enemiesRespawnAreas.push(new XY(-(ENEMY_WIDTH + 30), i * (ENEMY_WIDTH + 30)));
 }
-for(let i = -1; i < (BOARD_HEIGHT/100) + 2; i++){
-  enemiesRespawnAreas.push(new XY(BOARD_WIDTH + (ENEMY_WIDTH + 30), i* (30 + ENEMY_WIDTH)));
+for (let i = -1; i < BOARD_HEIGHT / 100 + 2; i++) {
+  enemiesRespawnAreas.push(
+    new XY(BOARD_WIDTH + (ENEMY_WIDTH + 30), i * (30 + ENEMY_WIDTH))
+  );
 }
-for(let i = 0; i < (BOARD_WIDTH/100) + 2;i++){
-  enemiesRespawnAreas.push(new XY(i*(ENEMY_WIDTH + 30), -(ENEMY_WIDTH + 30)));
+for (let i = 0; i < BOARD_WIDTH / 100 + 2; i++) {
+  enemiesRespawnAreas.push(new XY(i * (ENEMY_WIDTH + 30), -(ENEMY_WIDTH + 30)));
 }
-for(let i = 0; i < (BOARD_WIDTH/100) + 2;i++){
-  enemiesRespawnAreas.push(new XY(i*(ENEMY_WIDTH + 30), -(ENEMY_WIDTH + 30)));
+for (let i = 0; i < BOARD_WIDTH / 100 + 2; i++) {
+  enemiesRespawnAreas.push(new XY(i * (ENEMY_WIDTH + 30), -(ENEMY_WIDTH + 30)));
 }
 
 $$bullets.forEach(($bullet) => {
   bullets.push(new Bullet($bullet, 100, 100));
 });
 
-
-
 document.addEventListener("keydown", (e) => {
+  if(e.code === 'Space'){
+    e.preventDefault();
+  }
   keys[e.code] = true;
 });
 
@@ -251,21 +242,25 @@ document.addEventListener("keyup", (e) => {
   keys[e.code] = false;
 });
 
-const mouseMoveEvent = (e)=>{
+$retryBtn.addEventListener('click', ()=>{
+  initGame();
+})
+
+
+const mouseMoveEvent = (e) => {
   const dx = e.offsetX - playerX - PLAYER_WIDTH / 2;
   const dy = e.offsetY - playerY - PLAYER_HEIGHT / 2;
 
   $player.style.transform = getAngleDegrees(dx, dy);
-}
-$board.addEventListener("mousemove", mouseMoveEvent);
+};
 
-const clickEvent = (e)=>{
+const clickEvent = (e) => {
   const dx = e.offsetX - playerX - PLAYER_WIDTH / 2;
   const dy = e.offsetY - playerY - PLAYER_HEIGHT / 2;
 
   attack(dx, dy);
-}
-$board.addEventListener("click",clickEvent);
+};
+$board.addEventListener("click", clickEvent);
 
 $$enemies.forEach(($enemy) => {
   const enemy = new Enemy($enemy);
@@ -273,9 +268,9 @@ $$enemies.forEach(($enemy) => {
 });
 
 // Game Loop
-const gameInterval = setInterval(gameLoop, SCREEN_FRAME);
+let gameInterval;
 function gameLoop() {
-  if(isGameEnd){
+  if (isGameEnd) {
     gameEnd();
   }
   moveEnemy();
@@ -289,40 +284,43 @@ function gameLoop() {
 
 
 
-// 총알처럼 적이 이동. let enemySpeed 로 적이 생성될 때 마다 높아짐. 
+// 총알처럼 적이 이동. let enemySpeed 로 적이 생성될 때 마다 높아짐.
 // let enemyTimeCount는 적이 생성될 때마다 줄어듬.
 // Enemy Active
 
-let enemyRespawnInterval = setInterval(intervalFunction, enemyTimeCount); 
-
-
+let enemyRespawnInterval;
 // Enemy Active End
 
 
+initGame();
 
 // function
 function intervalFunction() {
   let enemy;
-  for(let i = 0; i < enemies.length; i++){
-    if(!enemies[i].isLive){
+  for (let i = 0; i < enemies.length; i++) {
+    if (!enemies[i].isLive) {
       enemy = enemies[i];
       break;
     }
   }
-  let xy = enemiesRespawnAreas[getRandomNumber(0, enemiesRespawnAreas.length - 1)];
-  enemy.activeEnemy(xy.x, xy.y, enemySpeed+= 0.1);
-  enemyTimeCount = enemyTimeCount - enemyTimeCountOffset <= 300? 300 : enemyTimeCount - enemyTimeCountOffset;
-  
+  let xy =
+    enemiesRespawnAreas[getRandomNumber(0, enemiesRespawnAreas.length - 1)];
+  enemy.activeEnemy(xy.x, xy.y, (enemySpeed += 0.1));
+  enemyTimeCount =
+    enemyTimeCount - enemyTimeCountOffset <= 300
+      ? 300
+      : enemyTimeCount - enemyTimeCountOffset;
+
   clearInterval(enemyRespawnInterval);
   enemyRespawnInterval = setInterval(intervalFunction, enemyTimeCount);
 }
 
-function gameEnd(){
+function gameEnd() {
   clearInterval(gameInterval);
   clearInterval(enemyRespawnInterval);
-  $board.removeEventListener('mousemove',mouseMoveEvent);
-  $board.removeEventListener('click',clickEvent);
-  console.log('you died.');
+  $board.removeEventListener("mousemove", mouseMoveEvent);
+  $board.removeEventListener("click", clickEvent);
+  console.log("you died.");
 }
 
 function getAngleDegrees(x, y) {
@@ -401,50 +399,93 @@ function moveEnemy() {
   });
 }
 
-function changeScoreStyle(){
+function changeScoreStyle() {
   let updatedScorePride = getSocorePride();
-  if(updatedScorePride === scorePride) return;
+  if (updatedScorePride === scorePride) return;
   scorePride = updatedScorePride;
-  switch(scorePride){
+  switch (scorePride) {
+    case 0:
+      $score.style.color = "black";
+      $score.style.transform = "scale(1)";
+      break;
     case 1:
-      $score.style.color = 'red';
-      $score.style.transform = 'scale(1.2)';
+      $score.style.color = "red";
+      $score.style.transform = "scale(1.2)";
       break;
     case 2:
-      $score.style.color = 'purple';
-      $score.style.transform = 'scale(1.5)';
+      $score.style.color = "purple";
+      $score.style.transform = "scale(1.5)";
       break;
     case 3:
-      $score.style.color = 'orange';
-      $score.style.transform = 'scale(1.7)';
+      $score.style.color = "orange";
+      $score.style.transform = "scale(1.7)";
       break;
     case 4:
-      $score.style.color = 'yellow';
-      $score.style.transform = 'scale(2)';
+      $score.style.color = "#7092be";
+      $score.style.transform = "scale(2)";
       break;
     case 5:
-      $score.style.color = 'gray';
-      $score.style.transform = 'scale(2.3)';
+      $score.style.color = "gray";
+      $score.style.transform = "scale(2.3)";
       break;
     default:
-      $score.style.color = 'black';
-      $score.style.transform = 'scale(1)';
+      $score.style.color = "black";
+      $score.style.transform = "scale(1)";
       break;
   }
 }
 
-function getSocorePride(){
-  if(score < 1000){
+function getSocorePride() {
+  if (score < 1000) {
     return 0;
-  }else if(score < 2000){
+  } else if (score < 2000) {
     return 1;
-  }else if(score<3000){
+  } else if (score < 3000) {
     return 2;
-  }else if(score<4000){
+  } else if (score < 4000) {
     return 3;
-  }else if(score<5000){
+  } else if (score < 5000) {
     return 4;
-  }else{
+  } else {
     return 5;
   }
+}
+
+function initGame() {
+  playerX = BOARD_WIDTH/2 - PLAYER_WIDTH/2;
+  playerY = 600;
+
+  enemySpeed = 5;
+  enemyTimeCount = 1000;
+
+  isGameEnd = false;
+
+  score = 0;
+
+  scorePride = 0;
+  $score.style.color = "black";
+  $score.style.transform = "scale(1)";
+  keys = {
+    KeyA: false,
+    KeyD: false,
+    KeyW: false,
+    KeyS: false,
+    Space: false,
+  };
+
+  enemies.forEach(enemy=>{
+    enemy.removeEnemy();
+  })
+  bullets.forEach(bullet=>{
+    bullet.removeBullet();
+  })
+  clearInterval(gameInterval);
+  clearInterval(enemyRespawnInterval);
+  
+  $board.addEventListener("mousemove", mouseMoveEvent);
+  $board.addEventListener("click", clickEvent);
+
+  gameInterval = setInterval(gameLoop, SCREEN_FRAME);
+
+  enemyRespawnInterval = setInterval(intervalFunction, enemyTimeCount);
 }

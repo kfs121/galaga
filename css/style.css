@@ -8,7 +8,33 @@ a{text-decoration: none; color: inherit;}
 img{display: block;}
 body{font-family: 'Noto Sans KR', sans-serif; user-select: none;}
 
+
+:root{
+  --bgColor:#333;
+  --themeColor:#635400;
+  --fontColor:#dddddd;
+}
+
+
+/* common */
 /* body * {outline: 1px dotted red;} */
+.inner{ max-width: 1200px; margin: 0 auto;}
+.clearMarginColl::after,
+.clearMarginColl::before{content: ""; display: table;}
+
+
+
+/* layout */
+#wrap{background-color: var(--bgColor); color: var(--fontColor);}
+aside {width: 150px; position: fixed; right: 30px;}
+
+.describe{margin: 4rem 0;}
+.describe .describe-el{max-width: 80%; margin: 0 auto;}
+.describe .describe-el p{ padding: 3rem; box-sizing: border-box;}
+.describe .describe-el h3{text-align: center; font-size: 2rem; padding: 1rem 0; border-top: 3px solid var(--themeColor); border-bottom: 3px solid var(--themeColor);}
+
+
+
 #player{outline: 1px dotted red;}
 #enemies li {outline: 1px dotted red;}
 #bullets li {outline: 1px dotted red;}
@@ -28,3 +54,4 @@ body{font-family: 'Noto Sans KR', sans-serif; user-select: none;}
 
 #score-board{width: 400px; margin: 20px auto; text-align: center; font-size: 40px;}
 #score-board #score{display: block;}
+
