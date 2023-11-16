@@ -96,3 +96,9 @@ aside .ranking-wrap #ranking{height: 120px; overflow-y: auto; padding: 0 20px; w
 
 
 .game-over-screen .add-success{ font-size: 56px; display: none; color: rgb(71, 242, 19);}
+.game-over-screen .add-ranking-loading{ width: 96px; height: 96px; background: url(https://img.icons8.com/?size=96&id=4V3PMUWE1tYc&format=png) no-repeat center/cover; animation: ani-loading 3s infinite linear; display: none;}
+
+@keyframes ani-loading {
+  0%{transform: rotateZ(0deg);}
+  100%{transform: rotateZ(360deg);}
+}

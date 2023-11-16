@@ -14,6 +14,7 @@ const $resultScore = $gameOverScreen.querySelector("#result-score");
 const $resultForm = document.querySelector(".game-over-screen form");
 const $sendBtn = $resultForm.querySelector("input[type=submit]");
 const $rankingAddMsg = document.querySelector(".add-success");
+const $addRankingLoading = $gameOverScreen.querySelector(".add-ranking-loading");
 
 
 const BULLET_SPEED = 20;
@@ -519,6 +520,7 @@ function initGame() {
   enemyRespawnInterval = setInterval(intervalFunction, enemyTimeCount);
   $rankingAddMsg.style.display = 'none';
   $resultForm.querySelector("input[type=submit]").disabled = false;
+  $addRankingLoading.style.display = 'none';
 }
 
 
@@ -526,6 +528,8 @@ function initGame() {
 $sendBtn.addEventListener("click", (e) => {
   e.preventDefault();
   e.target.disabled = true;
+  $addRankingLoading.style.display = 'block';
+
   fetch("https://space-war-server.onrender.com/ranking/add", {
     method:"post",
     headers: {
@@ -538,6 +542,7 @@ $sendBtn.addEventListener("click", (e) => {
     })
   })
   .then((res)=>{
+    $addRankingLoading.style.display = 'none';
     $rankingAddMsg.style.display = 'block';
     score = 0;
     $resultForm.name.value = "";
