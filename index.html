@@ -7,24 +7,46 @@
   <link rel="stylesheet" href="./css/style.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script defer src="./js/custom.js"></script>
+  <script defer src="./js/game.js"></script>
+  <script defer src="./js/score.js"></script>
   <title>Document</title>
 </head>
 <body oncontextmenu="return false">
   <div id="wrap" class="clearMarginColl">
     <aside>
-      <button id="retry">다시 시작</button>
       <div class="ranking-wrap">
+        <button class="reset"></button>
         <ol id="ranking">
-          <li>1등</li>
-          <li>2등</li>
-          <li>3등</li>
-          <li>4등</li>
+          <li class="ranking-column">
+            <span class="place">순위</span>
+            <span class="name">이름</span>
+            <span class="message">메시지</span>
+            <span class="score">점수</span>
+          </li>
         </ol>
       </div>
     </aside>
     
     <div id="board">
+      <div id="game-menu-screen">
+        <div class="start-screen">
+          <button id="start-btn">게임 시작</button>
+        </div>
+        <div class="game-over-screen">
+          <span id="result-score">00</span>
+          <form action="">
+            <label for="name"><span>이름 </span><input type="text" name="name" id="name" maxlength="12"></label>
+            
+            <label for="message"><span>메시지 </span><input type="text" name="message" id="message" maxlength="30"></label>
+
+            <div class="send-btn-wrap">
+              <input type="submit" value="전송" name="" id="">
+            </div>
+          </form>
+          <span class="add-success">랭킹 등록 완료!!</span>
+          <button id="retry">다시 시작</button>
+        </div>
+      </div>
       <div id="score-board">
         <span id="score">00</span><br>
       </div>

@@ -7,6 +7,14 @@ const $board = document.querySelector("#board");
 const $$enemies = document.querySelectorAll("#enemies li");
 const $score = document.querySelector("#score");
 const $retryBtn = document.querySelector('#retry');
+const $startBtn = document.getElementById("start-btn");
+const $gameMenuScreen = document.getElementById("game-menu-screen");
+const $gameOverScreen = document.querySelector(".game-over-screen");
+const $resultScore = $gameOverScreen.querySelector("#result-score");
+const $resultForm = document.querySelector(".game-over-screen form");
+const $sendBtn = $resultForm.querySelector("input[type=submit]");
+const $rankingAddMsg = document.querySelector(".add-success");
+
 
 const BULLET_SPEED = 20;
 const PLAYER_SPEED = 10;
@@ -27,6 +35,8 @@ const BULLET_HEIGHT = 24;
 
 let bullets = [];
 let enemies = [];
+
+
 
 let playerX;
 let playerY;
@@ -211,6 +221,8 @@ class Bullet {
   }
 }
 
+
+
 const enemiesRespawnAreas = [];
 for (let i = -1; i < BOARD_HEIGHT / 100 + 2; i++) {
   enemiesRespawnAreas.push(new XY(-(ENEMY_WIDTH + 30), i * (ENEMY_WIDTH + 30)));
@@ -231,21 +243,27 @@ $$bullets.forEach(($bullet) => {
   bullets.push(new Bullet($bullet, 100, 100));
 });
 
-document.addEventListener("keydown", (e) => {
+
+const moveKeyDownEvent = (e) =>{
   if(e.code === 'Space'){
     e.preventDefault();
   }
   keys[e.code] = true;
-});
+}
 
-document.addEventListener("keyup", (e) => {
+const moveKeyUpEvent = (e) => {
   keys[e.code] = false;
-});
+}
 
-$retryBtn.addEventListener('click', ()=>{
+$startBtn.addEventListener('click', ()=>{
+  $gameMenuScreen.style.display = 'none';
   initGame();
 })
 
+$retryBtn.addEventListener('click', ()=>{
+  $gameMenuScreen.style.display = 'none';
+  initGame();
+})
 
 const mouseMoveEvent = (e) => {
   const dx = e.offsetX - playerX - PLAYER_WIDTH / 2;
@@ -260,7 +278,7 @@ const clickEvent = (e) => {
 
   attack(dx, dy);
 };
-$board.addEventListener("click", clickEvent);
+// $board.addEventListener("click", clickEvent);
 
 $$enemies.forEach(($enemy) => {
   const enemy = new Enemy($enemy);
@@ -292,7 +310,7 @@ let enemyRespawnInterval;
 // Enemy Active End
 
 
-initGame();
+//initGame();
 
 // function
 function intervalFunction() {
@@ -320,6 +338,12 @@ function gameEnd() {
   clearInterval(enemyRespawnInterval);
   $board.removeEventListener("mousemove", mouseMoveEvent);
   $board.removeEventListener("click", clickEvent);
+  document.removeEventListener("keydown", moveKeyDownEvent);
+  document.removeEventListener("keyup", moveKeyUpEvent);
+  $resultScore.textContent = score;
+  $gameMenuScreen.style.display = 'block';
+  $gameOverScreen.style.display = 'flex';
+
   console.log("you died.");
 }
 
@@ -481,6 +505,11 @@ function initGame() {
   })
   clearInterval(gameInterval);
   clearInterval(enemyRespawnInterval);
+  clearInterval(moveKeyDownEvent);
+  clearInterval(moveKeyUpEvent);
+
+  document.addEventListener("keydown", moveKeyDownEvent);
+  document.addEventListener("keyup", moveKeyUpEvent);
   
   $board.addEventListener("mousemove", mouseMoveEvent);
   $board.addEventListener("click", clickEvent);
@@ -488,4 +517,37 @@ function initGame() {
   gameInterval = setInterval(gameLoop, SCREEN_FRAME);
 
   enemyRespawnInterval = setInterval(intervalFunction, enemyTimeCount);
+  $rankingAddMsg.style.display = 'none';
+  $resultForm.querySelector("input[type=submit]").disabled = false;
 }
+
+
+
+$sendBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.target.disabled = true;
+  fetch("https://space-war-server.onrender.com/ranking/add", {
+    method:"post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name:$resultForm.name.value,
+      message:$resultForm.message.value,
+      score:score
+    })
+  })
+  .then((res)=>{
+    $rankingAddMsg.style.display = 'block';
+    score = 0;
+    $resultForm.name.value = "";
+    $resultForm.message.value = "";
+  })
+  .catch(err=>{
+    console.log(err);
+  })
+});
+
+
+
+
